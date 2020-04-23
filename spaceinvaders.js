@@ -447,7 +447,7 @@ function update(calc) {
 
     // ALIENS
     let alWidth = textures.getSprite("Invader-4-0.png").w * 4;
-    if (ALIEN_ARRAY[0] == null) {
+    if (ALIEN_ARRAY == null) {
         GAME_WON = true;
         //GAME_OVER = true;
     }
