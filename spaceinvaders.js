@@ -16,7 +16,8 @@ var PLAYER_SPEED = 150;
 var PLAYER_FIRE_TIMEOUT = 0.8; // seconds
 var BULLET_LIST = [];
 var COINS_LIST = [];
-var BULLET_SPEED = 300;
+var BULLET_SPEED = 250;
+var ALIEN_BULLET_SPEED = 450;
 var COIN_YSPEED = 200;
 var COIN_ANIM_TIME = 1; // seconds for full cycle
 var COIN_VALUE = 1;
@@ -98,7 +99,11 @@ function keydown(e) {
             GAME_OVER = true;
             break;
         case "g":
-            GAME_WON = true;
+            // GAME_WON = true;
+            for (let i = 0; i < ALIEN_ARRAY.length; i++) {
+                ALIEN_ARRAY.splice(i, 1);
+                i--;
+            }
             break;
     }
 }
@@ -132,7 +137,7 @@ class TextureManager {
                     return response.json();
                 })
                 .then((data) => {
-                    this.dataSheet=data;
+                    this.dataSheet = data;
                     reset();
                     globalDraw();
                 });
@@ -147,13 +152,13 @@ class TextureManager {
     }
 
     draw(spriteName, x, y, _ctx, scale = 1) {
-        if(this.dataSheet == null) return;
+        if (this.dataSheet == null) return;
         let obj = this.dataSheet.frames[spriteName];
         _ctx.drawImage(this.img, obj.frame.x, obj.frame.y, obj.frame.w, obj.frame.h, Math.floor(x), Math.floor(y), obj.frame.w * scale, obj.frame.h * scale);
     }
 
     getSprite(spriteName) {
-        if(this.dataSheet == null) return;
+        if (this.dataSheet == null) return;
         let obj = this.dataSheet.frames[spriteName];
         return {w: obj.frame.w, h: obj.frame.h, test: "hi"};
     }
@@ -309,7 +314,7 @@ class Alien {
             if (n == 69) {
                 this.dropCoin();
             }
-            if (n > 2 && n <= 10) {
+            if (n > 2 && n <= 30) {
                 this.dropBullet();
             }
         }
@@ -328,7 +333,7 @@ class Alien {
     }
 
     dropBullet() {
-        BULLET_LIST.push(new Bullet("Bullet-Enemy.png", BULLET_SPEED, this.centerX, this.y + this.height, false))
+        BULLET_LIST.push(new Bullet("Bullet-Enemy.png", ALIEN_BULLET_SPEED, this.centerX, this.y + this.height, false))
     }
 
     draw(_ctx) {
@@ -405,6 +410,8 @@ function reset() {
 }
 
 function update(calc) {
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, cvs.width, cvs.height);
     if (GAME_OVER) {
         ctx.fillStyle = "white";
         ctx.font = "100px Arial"
@@ -412,15 +419,13 @@ function update(calc) {
         return;
     }
     if (GAME_WON) {
+        console.log("tihng");
         ctx.fillStyle = "white";
         ctx.font = "100px Arial"
         ctx.fillText("YOU WIN!", 200, 300, 200)
         return;
     }
     offScreenContext.clearRect(0, 0, offScreenCanvas.width, offScreenCanvas.height);
-    ctx.clearRect(0, 0, cvs.width, cvs.height);
-    offScreenContext.fillStyle = "black";
-    offScreenContext.fillRect(0, 0, cvs.width, cvs.height);
 
     // PLAYER
     player.update(calc);
@@ -447,8 +452,9 @@ function update(calc) {
 
     // ALIENS
     let alWidth = textures.getSprite("Invader-4-0.png").w * 4;
-    if (ALIEN_ARRAY == null) {
+    if (ALIEN_ARRAY.length == 0) {
         GAME_WON = true;
+        return;
         //GAME_OVER = true;
     }
     if (ALIEN_ARRAY[0][0].x - 15 + alienDir * (alienXSpeed * calc) < 0 || ALIEN_ARRAY[ALIEN_ARRAY.length - 1][0].x + alWidth + alienDir * (alienXSpeed * calc) > cvs.width) {
