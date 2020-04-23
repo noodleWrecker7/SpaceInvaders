@@ -2,13 +2,14 @@ const {app, BrowserWindow} = require('electron');
 
 function createWindow() {
     let win = new BrowserWindow({
-        width: 500,
+        width: 600,
         height: 800,
         useContentSize: true,
         webPreferences: {
             nodeIntegration: true
         },
-        resizable: false
+        resizable: false,
+        title: "Invaders From Space"
     })
     //win.removeMenu();
     win.loadFile('index.html');
