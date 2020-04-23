@@ -52,6 +52,8 @@ window.onload = async function () {
     offScreenContext.imageSmoothingEnabled = false;
     ctx.imageSmoothingEnabled = false;
     textures = new TextureManager(IMG_SHEET_PATH, DATA_SHEET_PATH)
+    textures.dataSheet = require(DATA_SHEET_PATH);
+
     console.log("after")
     //console.log(textures.dataSheet.meta.version);
     document.addEventListener("keydown", keydown);
@@ -126,7 +128,6 @@ class TextureManager {
 
     constructor(imgSheet, dataSheet) {
         console.log("before");
-        this.dataSheet = require(dataSheet);
         this.imgSheet = imgSheet;
         this.load();
     }
