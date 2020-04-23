@@ -52,15 +52,12 @@ window.onload = async function () {
     offScreenContext.imageSmoothingEnabled = false;
     ctx.imageSmoothingEnabled = false;
     textures = new TextureManager(IMG_SHEET_PATH, DATA_SHEET_PATH)
-    textures.dataSheet = require(DATA_SHEET_PATH);
-
     console.log("after")
     //console.log(textures.dataSheet.meta.version);
     document.addEventListener("keydown", keydown);
     document.addEventListener("keyup", keyup);
 
-    reset();
-    globalDraw();
+
 };
 
 function createInvaders() {
@@ -126,8 +123,20 @@ function keyup(e) {
 
 class TextureManager {
 
-    constructor(imgSheet, dataSheet) {
+    constructor(imgSheet, dataSheetPath) {
         console.log("before");
+        //this.dataSheet = require(dataSheetPath);
+        if (this.dataSheet == null) {
+            fetch(dataSheetPath)
+                .then((response) => {
+                    return response.json();
+                })
+                .then((data) => {
+                    this.dataSheet=data;
+                    reset();
+                    globalDraw();
+                });
+        }
         this.imgSheet = imgSheet;
         this.load();
     }
@@ -138,11 +147,13 @@ class TextureManager {
     }
 
     draw(spriteName, x, y, _ctx, scale = 1) {
+        if(this.dataSheet == null) return;
         let obj = this.dataSheet.frames[spriteName];
         _ctx.drawImage(this.img, obj.frame.x, obj.frame.y, obj.frame.w, obj.frame.h, Math.floor(x), Math.floor(y), obj.frame.w * scale, obj.frame.h * scale);
     }
 
     getSprite(spriteName) {
+        if(this.dataSheet == null) return;
         let obj = this.dataSheet.frames[spriteName];
         return {w: obj.frame.w, h: obj.frame.h, test: "hi"};
     }
