@@ -234,6 +234,7 @@ class Bullet {
                             ALIEN_ARRAY.splice(i, 1);
                         }
                         alienXSpeed += ALIEN_SPEED_INCREMENT;
+                        alienAnimCycleTime -= 0.01;
                         this.active = false;
                         return;
                     }
