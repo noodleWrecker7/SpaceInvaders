@@ -53,7 +53,6 @@ window.onload = async function () {
     offScreenContext.imageSmoothingEnabled = false;
     ctx.imageSmoothingEnabled = false;
     textures = new TextureManager(IMG_SHEET_PATH, DATA_SHEET_PATH)
-    console.log("after")
     //console.log(textures.dataSheet.meta.version);
     document.addEventListener("keydown", keydown);
     document.addEventListener("keyup", keyup);
@@ -129,7 +128,6 @@ function keyup(e) {
 class TextureManager {
 
     constructor(imgSheet, dataSheetPath) {
-        console.log("before");
         //this.dataSheet = require(dataSheetPath);
         if (this.dataSheet == null) {
             fetch(dataSheetPath)
@@ -206,7 +204,6 @@ class Player {
         let w = textures.getSprite("Turret.png").w;
 
         BULLET_LIST.push(new Bullet("Bullet-Player.png", -this.bulletSpeed, this.x + (w / 2) - 1, this.y, true));
-        console.log("shot")
     }
 }
 
@@ -245,7 +242,6 @@ class Bullet {
         } else {
 
             if (isColliding(this.x, this.y, bW, bH, player.x, player.y, player.width, player.height)) {
-                console.log("PLAYER HIT");
                 GAME_OVER = true;
                 this.active = false;
             }
@@ -310,11 +306,11 @@ class Alien {
         this.animElapsed += calc;
         if (this.animElapsed > alienAnimCycleTime) {
             this.animElapsed = 0;
-            let n = Math.floor(Math.random() * 1000);
+            let n = Math.floor(Math.random() * (5000 / (alienXSpeed / 3)));
             if (n == 69) {
                 this.dropCoin();
             }
-            if (n > 2 && n <= 30) {
+            if (n > 2 && n <= 30 + alienXSpeed / 5) {
                 this.dropBullet();
             }
         }
@@ -419,7 +415,6 @@ function update(calc) {
         return;
     }
     if (GAME_WON) {
-        console.log("tihng");
         ctx.fillStyle = "white";
         ctx.font = "100px Arial"
         ctx.fillText("YOU WIN!", 200, 300, 200)
