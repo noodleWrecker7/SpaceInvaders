@@ -11,29 +11,63 @@ var offScreenContext;
 ctx.fillStyle = "black";
 ctx.fillRect(0, 0, cvs.width, cvs.height);
 
+
+function reset() {
+    PLAYER_SPEED = 150;
+    PLAYER_FIRE_TIMEOUT = 0.8; // seconds
+    BULLET_LIST = [];
+    COINS_LIST = [];
+    BULLET_SPEED = 250;
+    ALIEN_BULLET_SPEED = 450;
+    COIN_YSPEED = 200;
+    COIN_ANIM_TIME = 1; // seconds for full cycle
+    COIN_VALUE = 1;
+    alienDir = 1;
+    alienXSpeed = 5;
+    ALIEN_SPEED_INCREMENT = 1.2;
+    ALIEN_ARRAY = [];
+    alienAnimCycleTime = 1 // seconds for full cycle
+    NUM_OF_INVADERS_COLUMNS = 10;
+    INVADER_X_GAP = 55;
+    INVADER_Y_MARGIN = 40;
+    INVADER_Y_GAP = 50;
+    INVADER_Y_DROP_DIST = 15;
+    BARRIER_LIST = [];
+
+    player = new Player();
+    COINS_LIST.push(new Coin(100, 100));
+    createInvaders()
+    for (let i = 0; i < 4; i++) {
+        BARRIER_LIST.push(new Barrier(75 + (i * 150) - 39, 700));
+    }
+
+    GAME_OVER = false;
+    GAME_WON = false;
+}
+
 // Game variables
-var PLAYER_SPEED = 150;
-var PLAYER_FIRE_TIMEOUT = 0.8; // seconds
-var BULLET_LIST = [];
-var COINS_LIST = [];
-var BULLET_SPEED = 250;
-var ALIEN_BULLET_SPEED = 450;
-var COIN_YSPEED = 200;
-var COIN_ANIM_TIME = 1; // seconds for full cycle
-var COIN_VALUE = 1;
-var alienDir = 1;
-var alienXSpeed = 2;
-var ALIEN_SPEED_INCREMENT = 1.2;
-var ALIEN_ARRAY = [];
-var alienAnimCycleTime = 1 // seconds for full cycle
-var NUM_OF_INVADERS_COLUMNS = 10;
-var INVADER_X_GAP = 55;
-var INVADER_Y_MARGIN = 40;
-var INVADER_Y_GAP = 50;
-var INVADER_Y_DROP_DIST = 15;
-var BARRIER_LIST = [];
-var GAME_OVER = false;
-var GAME_WON = false;
+var PLAYER_SPEED;
+var PLAYER_FIRE_TIMEOUT; // seconds
+var BULLET_LIST;
+var COINS_LIST;
+var BULLET_SPEED;
+var ALIEN_BULLET_SPEED;
+var COIN_YSPEED;
+var COIN_ANIM_TIME; // seconds for full cycle
+var COIN_VALUE;
+var alienDir;
+var alienXSpeed;
+var ALIEN_SPEED_INCREMENT;
+var ALIEN_ARRAY;
+var alienAnimCycleTime;// seconds for full cycle
+var NUM_OF_INVADERS_COLUMN;
+var INVADER_X_GAP
+var INVADER_Y_MARGIN
+var INVADER_Y_GAP;
+var INVADER_Y_DROP_DIST;
+var BARRIER_LIST;
+var GAME_OVER;
+var GAME_WON;
 
 
 // Setup variables
@@ -56,8 +90,6 @@ window.onload = async function () {
     //console.log(textures.dataSheet.meta.version);
     document.addEventListener("keydown", keydown);
     document.addEventListener("keyup", keyup);
-
-
 };
 
 function createInvaders() {
@@ -193,7 +225,8 @@ class Player {
         }
 
         this.x += this.dx * calc;
-        this.timeSinceShot += 1 * calc;
+        this.timeSinceShot += calc;
+        console.log(this.shotTimeout)
         if (this.shooting && this.timeSinceShot > this.shotTimeout) { // TODO add timeout to shots
             this.shoot();
             this.timeSinceShot = 0;
@@ -307,7 +340,7 @@ class Alien {
         this.animElapsed += calc;
         if (this.animElapsed > alienAnimCycleTime) {
             this.animElapsed = 0;
-            let n = Math.floor(Math.random() * (5000 / (alienXSpeed / 3)));
+            let n = Math.floor(Math.random() * (5000 / (alienXSpeed / 4)));
             if (n == 69) {
                 this.dropCoin();
             }
@@ -374,37 +407,6 @@ function killBarrier() {
 
 let num = 0;
 
-function reset() {
-    PLAYER_SPEED = 150;
-    PLAYER_FIRE_TIMEOUT = 0.8; // seconds
-    BULLET_LIST = [];
-    COINS_LIST = [];
-    BULLET_SPEED = 300;
-    COIN_YSPEED = 200;
-    COIN_ANIM_TIME = 1; // seconds for full cycle
-    COIN_VALUE = 1;
-    alienDir = 1;
-    alienXSpeed = 8;
-    ALIEN_SPEED_INCREMENT = 1;
-    ALIEN_ARRAY = [];
-    alienAnimCycleTime = 1 // seconds for full cycle
-    NUM_OF_INVADERS_COLUMNS = 10;
-    INVADER_X_GAP = 55;
-    INVADER_Y_MARGIN = 40;
-    INVADER_Y_GAP = 50;
-    INVADER_Y_DROP_DIST = 15;
-    BARRIER_LIST = [];
-
-    player = new Player();
-    COINS_LIST.push(new Coin(100, 100));
-    createInvaders()
-    for (let i = 0; i < 4; i++) {
-        BARRIER_LIST.push(new Barrier(75 + (i * 150) - 39, 700));
-    }
-
-    GAME_OVER = false;
-    GAME_WON = false;
-}
 
 function update(calc) {
     ctx.fillStyle = "black";
