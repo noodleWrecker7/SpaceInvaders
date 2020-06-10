@@ -226,7 +226,6 @@ class Player {
 
         this.x += this.dx * calc;
         this.timeSinceShot += calc;
-        console.log(this.shotTimeout)
         if (this.shooting && this.timeSinceShot > this.shotTimeout) { // TODO add timeout to shots
             this.shoot();
             this.timeSinceShot = 0;
